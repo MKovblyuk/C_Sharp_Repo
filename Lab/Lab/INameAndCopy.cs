@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lab2_Variant3
+namespace Lab
 {
     interface INameAndCopy
     {

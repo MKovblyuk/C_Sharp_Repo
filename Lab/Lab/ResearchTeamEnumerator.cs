@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace Lab2_Variant3
+namespace Lab
 {
-    class ResearchTeamEnumerator : IEnumerator
+    class ResearchTeamEnumerator : IEnumerator<Person>
     {
-        private ArrayList participants;
+        private List<Person> participants;
         private int position = -1;
 
-        public ResearchTeamEnumerator(ArrayList participants,ArrayList publications)
+        public ResearchTeamEnumerator(List<Person> participants,List<Paper> publications)
         {
-            this.participants = (ArrayList)GetParticipantsWithPublication(participants, publications);
+            this.participants = GetParticipantsWithPublication(participants, publications).ToList();
         }
-        public object Current => (position == -1 || position >= participants.Count) ?
+        public Person Current => (position == -1 || position >= participants.Count) ?
             throw new InvalidOperationException() : participants[position];
+
+        object IEnumerator.Current => Current;
 
         public bool MoveNext()
         {
@@ -28,13 +30,13 @@ namespace Lab2_Variant3
         }
 
         public void Reset() => position = -1;
+        public void Dispose() { }
 
-
-        private IEnumerable GetParticipantsWithPublication(ArrayList participants,ArrayList publications)
+        private IEnumerable<Person> GetParticipantsWithPublication(List<Person> participants,List<Paper> publications)
         {
             foreach (Person person in participants)
             {
-                if (publications.ToArray().Any(p => ((Paper)p).Author.Equals(person)))
+                if (publications.Any(p => p.Author.Equals(person)))
                     yield return person;
             }
         }

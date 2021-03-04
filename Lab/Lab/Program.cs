@@ -1,80 +1,113 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace Lab2_Variant3
+namespace Lab
 {
     class Program
-    {     
+    {
         static void Main(string[] args)
         {
-            Team team1 = new Team("A", 23);
-            Team team2 = new Team("A", 23);
-            ResearchTeam team3 = new ResearchTeam();
-            Console.WriteLine("Hash team1 = " + team1.GetHashCode());
-            Console.WriteLine("Hash team2 = " + team2.GetHashCode());
-            Console.WriteLine("team1 equals team2 : " + team1.Equals(team2));
-
-            try
+            List<Paper> publications = new List<Paper>
             {
-                team1.RegisterNumber = -2;
-            }
-            catch(ArgumentOutOfRangeException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            ResearchTeam researchTeam = new ResearchTeam("resThemeTT","orgNameAAA",22,TimeFrame.Long);
-            researchTeam.AddPapers(
-                new Paper("paper1",new Person() { Name = "Bob"},new DateTime(2020,6,23)),
-                new Paper("paper2", new Person() { Name = "Tom" }, new DateTime(2018, 7, 11)),
-                new Paper("paper3", new Person() { Name = "Nick" }, new DateTime(2019, 6, 4)),
-                new Paper("paper4", new Person() { Name = "Bob" }, new DateTime(2021, 6, 23)),
-                new Paper("paper5", new Person() { Name = "Tom" }, new DateTime(2018, 8, 11))
-            );
-
-            Console.WriteLine($"Researc team:\n{researchTeam}\n");
-            Console.WriteLine($"Team:\n{researchTeam.Team}\n");
-
-            ResearchTeam researchCopy = (ResearchTeam)researchTeam.DeepCopy();
-            researchTeam.Name = "NEW NAME";
-            Console.WriteLine($"\nOriginal:\n{researchTeam}\n");
-            Console.WriteLine($"\nCopy:\n{researchCopy}\n");
-
-
-            researchTeam.Participants = new ArrayList(){
-                new Person() { Name = "Bob" },
-                new Person() { Name = "Tom" },
-                new Person() { Name = "Fred" },
-                new Person() { Name = "George" },
-                new Person() { Name = "Nick" }
+                new Paper(),
+                new Paper(),
+                new Paper(),
+                new Paper()
             };
 
-
-            Console.WriteLine("\nParticipants without publications:\n");
-            foreach(Person person in researchTeam.GetParticipantsWithoutPublication())
+            List<Person> participants = new List<Person>
             {
-                Console.WriteLine($"{person}\n");
+                new Person(),
+                new Person(),
+                new Person()
+            };
+
+            ResearchTeam t1 = new ResearchTeam("theme1", "org1", 5, TimeFrame.Long)
+            {
+                Publications = publications.Take(4).ToList(),
+                Participants = participants.Take(3).ToList()
+            };
+            ResearchTeam t2 = new ResearchTeam("theme5", "org13", 2, TimeFrame.TwoYears)
+            {
+                Publications = publications.Take(3).ToList(),
+                Participants = participants.Take(2).ToList()
+            };
+            ResearchTeam t3 = new ResearchTeam("theme6", "org14", 3, TimeFrame.Long)
+            {
+                Publications = publications.Take(3).ToList(),
+                Participants = participants.Take(2).ToList()
+            };
+            ResearchTeam t4 = new ResearchTeam("theme3", "org5", 15, TimeFrame.TwoYears)
+            {
+                Publications = publications.Take(1).ToList(),
+                Participants = participants.Take(3).ToList()
+            };
+            ResearchTeam t5 = new ResearchTeam("theme2", "org2", 12, TimeFrame.Year)
+            {
+                Publications = publications.Take(4).ToList(),
+                Participants = participants.Take(2).ToList()
+            };
+            ResearchTeam t6 = new ResearchTeam("theme11", "org2", 5, TimeFrame.TwoYears)
+            {
+                Publications = publications.Take(2).ToList(),
+                Participants = participants.Take(3).ToList()
+            };
+
+            ResearchTeamCollection collection = new ResearchTeamCollection();
+            collection.AddResearchTeams(t1, t2, t3, t4, t5, t6);
+
+            Console.WriteLine("Sorted by register number:");
+            collection.SortByRegisterNumber();
+            Console.WriteLine(collection.ToShortString());
+
+            Console.WriteLine("Sorted by research theme:");
+            collection.SortByResearchTheme();
+            Console.WriteLine(collection.ToShortString());
+
+            Console.WriteLine("Sorted by publications count:");
+            collection.SortByPublicationsCount();
+            Console.WriteLine(collection.ToShortString());
+
+            Console.WriteLine("Min register number:");
+            Console.WriteLine(collection.MinRegisterNumber);
+
+            Console.WriteLine("Research duration TwoYears:");
+            foreach(var rt in collection.TwoYearsResearches)
+            {
+                Console.WriteLine(rt);
             }
 
-            Console.WriteLine("\nPublications for the last two years:\n");
-            foreach (Paper paper in researchTeam.GetPublicationsLastYears(2))
+            Console.WriteLine("Grouping by publications count:");
+            foreach(var g in collection.NGroup(2))
             {
-                Console.WriteLine($"{paper}\n");
+                Console.WriteLine($"Key = {g.Key}");
+                Console.WriteLine("Research teams:");
+                foreach (var t in g)
+                    Console.WriteLine(t);
             }
 
-            Console.WriteLine("\nParticipants with more than one publications:\n");
-            foreach (Person person in researchTeam.GetParticipantsWithMoreThanOnePub())
+            int elementsCount = 0;
+            string inputStr;
+            do
             {
-                Console.WriteLine($"{person}\n");
+                Console.WriteLine("Enter elements count: ");
+                inputStr = Console.ReadLine();
             }
+            while (!int.TryParse(inputStr,out elementsCount) || elementsCount < 1);
 
-            Console.WriteLine("\nPublications for the last year:\n");
-            foreach (Paper paper in researchTeam.GetPublicationsLastYear())
-            {
-                Console.WriteLine($"{paper}\n");
-            }
+            TestCollections test = new TestCollections(elementsCount);
+            Console.WriteLine("Showing execution time for first object:");
+            test.ShowExecutionTime(TestCollections.GetResearchTeam(0));
 
+            Console.WriteLine("Showing execution time for middle object:");
+            test.ShowExecutionTime(TestCollections.GetResearchTeam(elementsCount / 2));
+
+            Console.WriteLine("Showing execution time for last object:");
+            test.ShowExecutionTime(TestCollections.GetResearchTeam(elementsCount - 1));
+
+            Console.WriteLine("Showing execution time for non-existent object:");
+            test.ShowExecutionTime(TestCollections.GetResearchTeam(elementsCount + 1));
         }
 
     }

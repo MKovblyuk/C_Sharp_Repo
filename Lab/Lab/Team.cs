@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lab2_Variant3
+namespace Lab
 {
-    class Team : INameAndCopy
+    class Team : INameAndCopy,IComparable
     {
         protected string organizationName;
         protected int registerNumber;
@@ -59,5 +59,15 @@ namespace Lab2_Variant3
 
         public static bool operator ==(Team t1, Team t2) => t1.Equals(t2);
         public static bool operator !=(Team t1, Team t2) => !(t1 == t2);
+
+
+        public int CompareTo(object obj)
+        {
+            Team t = obj as Team;
+            if (t != null)
+                return registerNumber.CompareTo(t.RegisterNumber);
+            else throw new Exception("Impossible to compare two objects");
+
+        }
     }
 }
