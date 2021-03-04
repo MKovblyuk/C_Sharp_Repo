@@ -108,6 +108,7 @@ namespace Lab
 
             Console.WriteLine("Showing execution time for non-existent object:");
             test.ShowExecutionTime(TestCollections.GetResearchTeam(elementsCount + 1));
+
         }
 
     }
