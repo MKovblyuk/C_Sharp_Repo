@@ -74,9 +74,10 @@ namespace Lab
                     birthDate.Equals(p.BirthDate);
             }
         }
-        
+  
         public virtual object DeepCopy() => new Person(Name, Surname, BirthDate);
         public static bool operator ==(Person p1, Person p2) => p1.Equals(p2);
         public static bool operator !=(Person p1, Person p2) => !(p1 == p2);
+
     }
 }

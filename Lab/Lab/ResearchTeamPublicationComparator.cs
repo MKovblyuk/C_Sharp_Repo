@@ -8,4 +8,5 @@ namespace Lab
     {
         public int Compare(ResearchTeam t1, ResearchTeam t2) => t1.Publications.Count - t2.Publications.Count;
     }
+
 }

@@ -189,7 +189,6 @@ namespace Lab
             }
         }
         public IEnumerable<Paper> GetPublicationsLastYear() => GetPublicationsLastYears(1);
-
         public int Compare(ResearchTeam t1, ResearchTeam t2) => string.Compare(t1.ResearchTheme, t2.ResearchTheme);
 
     }

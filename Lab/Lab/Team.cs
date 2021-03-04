@@ -60,7 +60,6 @@ namespace Lab
         public static bool operator ==(Team t1, Team t2) => t1.Equals(t2);
         public static bool operator !=(Team t1, Team t2) => !(t1 == t2);
 
-
         public int CompareTo(object obj)
         {
             Team t = obj as Team;

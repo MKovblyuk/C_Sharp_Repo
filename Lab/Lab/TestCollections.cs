@@ -64,7 +64,6 @@ namespace Lab
             state = dictString.ContainsValue(researchTeam);
             end = Environment.TickCount;
             Console.WriteLine($"dictString by value : {end - start}");
-
         }
 
         

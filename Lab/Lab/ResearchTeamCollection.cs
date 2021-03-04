@@ -17,7 +17,6 @@ namespace Lab
         }
 
         public void AddResearchTeams(params ResearchTeam[] teams) => researchTeams.AddRange(teams);
-
         public void SortByRegisterNumber() => researchTeams.Sort();
         public void SortByResearchTheme() => researchTeams.Sort(new ResearchTeam());
         public void SortByPublicationsCount() => researchTeams.Sort(new ResearchTeamPublicationComparator());

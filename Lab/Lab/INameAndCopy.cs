@@ -8,5 +8,6 @@ namespace Lab
     {
         string Name { get; set; }
         object DeepCopy();
+
     }
 }

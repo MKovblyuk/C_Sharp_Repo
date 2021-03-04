@@ -51,6 +51,7 @@ namespace Lab
             return hash;
         }
 
+
         public static bool operator ==(Paper p1, Paper p2) => p1.Equals(p2);
         public static bool operator !=(Paper p1, Paper p2) => !(p1 == p2);
     }

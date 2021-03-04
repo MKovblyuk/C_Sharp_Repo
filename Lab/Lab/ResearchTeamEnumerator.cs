@@ -40,5 +40,6 @@ namespace Lab
                     yield return person;
             }
         }
+
     }
 }
