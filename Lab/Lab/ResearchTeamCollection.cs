@@ -13,10 +13,22 @@ namespace Lab
         {
             int teamsCount = 3;
             for (int i = 0; i < teamsCount; i++)
+            {
                 researchTeams.Add(new ResearchTeam());
+                OnResearchTeamAdded(new TeamListHandlerEventArgs(CollectionName, 
+                    ResearchTeamAddedMessage, researchTeams.Count - 1));
+            }                        
         }
 
-        public void AddResearchTeams(params ResearchTeam[] teams) => researchTeams.AddRange(teams);
+        public void AddResearchTeams(params ResearchTeam[] teams)
+        {
+            foreach(var team in teams)
+            {
+                researchTeams.Add(team);
+                OnResearchTeamAdded(new TeamListHandlerEventArgs(CollectionName,
+                    ResearchTeamAddedMessage, researchTeams.Count - 1));
+            }
+        }
         public void SortByRegisterNumber() => researchTeams.Sort();
         public void SortByResearchTheme() => researchTeams.Sort(new ResearchTeam());
         public void SortByPublicationsCount() => researchTeams.Sort(new ResearchTeamPublicationComparator());
@@ -49,5 +61,39 @@ namespace Lab
 
             return sb.ToString();
         }
+
+        public delegate void TeamListHandler(object source, TeamListHandlerEventArgs args);
+
+        public string CollectionName { get; set; }
+
+        public void InsertAt(int j,ResearchTeam researchTeam)
+        {
+            if (researchTeams.Count > j && j >= 0)
+            {
+                researchTeams.Insert(j, researchTeam);
+                OnResearchTeamInserted(new TeamListHandlerEventArgs(CollectionName, ResearchTeamInsertedMessage, j));
+            }
+            else
+            {
+                researchTeams.Add(researchTeam);
+                OnResearchTeamAdded(new TeamListHandlerEventArgs(CollectionName,
+                    ResearchTeamAddedMessage, researchTeams.Count - 1));
+            }   
+        }
+
+        public ResearchTeam this[int index]
+        {
+            get { return researchTeams[index]; }
+            set { researchTeams[index] = value; }
+        }
+
+        public event TeamListHandler ResearchTeamAdded;
+        public event TeamListHandler ResearchTeamInserted;
+
+        protected virtual void OnResearchTeamAdded(TeamListHandlerEventArgs e) => ResearchTeamAdded?.Invoke(this, e);
+        protected virtual void OnResearchTeamInserted(TeamListHandlerEventArgs e) => ResearchTeamInserted?.Invoke(this, e);
+
+        public string ResearchTeamAddedMessage { get; set; } = "ResearchTeam item added in collection";
+        public string ResearchTeamInsertedMessage { get; set; } = "ResearchTeam item inserted in collection";
     }
 }

@@ -8,107 +8,51 @@ namespace Lab
     {
         static void Main(string[] args)
         {
-            List<Paper> publications = new List<Paper>
-            {
-                new Paper(),
-                new Paper(),
-                new Paper(),
-                new Paper()
-            };
+            ResearchTeamCollection collection1 = new ResearchTeamCollection() { CollectionName = "Collection 1"};
+            ResearchTeamCollection collection2 = new ResearchTeamCollection() { CollectionName = "Collection 2"};
 
-            List<Person> participants = new List<Person>
-            {
-                new Person(),
-                new Person(),
-                new Person()
-            };
+            TeamsJournal teamsJournal1 = new TeamsJournal();
+            TeamsJournal teamsJournal2 = new TeamsJournal();
 
-            ResearchTeam t1 = new ResearchTeam("theme1", "org1", 5, TimeFrame.Long)
-            {
-                Publications = publications.Take(4).ToList(),
-                Participants = participants.Take(3).ToList()
-            };
-            ResearchTeam t2 = new ResearchTeam("theme5", "org13", 2, TimeFrame.TwoYears)
-            {
-                Publications = publications.Take(3).ToList(),
-                Participants = participants.Take(2).ToList()
-            };
-            ResearchTeam t3 = new ResearchTeam("theme6", "org14", 3, TimeFrame.Long)
-            {
-                Publications = publications.Take(3).ToList(),
-                Participants = participants.Take(2).ToList()
-            };
-            ResearchTeam t4 = new ResearchTeam("theme3", "org5", 15, TimeFrame.TwoYears)
-            {
-                Publications = publications.Take(1).ToList(),
-                Participants = participants.Take(3).ToList()
-            };
-            ResearchTeam t5 = new ResearchTeam("theme2", "org2", 12, TimeFrame.Year)
-            {
-                Publications = publications.Take(4).ToList(),
-                Participants = participants.Take(2).ToList()
-            };
-            ResearchTeam t6 = new ResearchTeam("theme11", "org2", 5, TimeFrame.TwoYears)
-            {
-                Publications = publications.Take(2).ToList(),
-                Participants = participants.Take(3).ToList()
-            };
+            collection1.ResearchTeamAdded += teamsJournal1.ResearchTeamChanged;
+            collection1.ResearchTeamInserted += teamsJournal1.ResearchTeamChanged;
 
-            ResearchTeamCollection collection = new ResearchTeamCollection();
-            collection.AddResearchTeams(t1, t2, t3, t4, t5, t6);
+            collection1.ResearchTeamAdded += teamsJournal2.ResearchTeamChanged;
+            collection1.ResearchTeamInserted += teamsJournal2.ResearchTeamChanged;
+            collection2.ResearchTeamAdded += teamsJournal2.ResearchTeamChanged;
+            collection2.ResearchTeamInserted += teamsJournal2.ResearchTeamChanged;
 
-            Console.WriteLine("Sorted by register number:");
-            collection.SortByRegisterNumber();
-            Console.WriteLine(collection.ToShortString());
+            // collection 1
 
-            Console.WriteLine("Sorted by research theme:");
-            collection.SortByResearchTheme();
-            Console.WriteLine(collection.ToShortString());
+            collection1.AddDefaults();
+            collection1.AddResearchTeams(
+                new ResearchTeam(),
+                new ResearchTeam(),
+                new ResearchTeam()
+            );
 
-            Console.WriteLine("Sorted by publications count:");
-            collection.SortByPublicationsCount();
-            Console.WriteLine(collection.ToShortString());
+            collection1.InsertAt(3, new ResearchTeam());
+            collection1.InsertAt(9, new ResearchTeam());
 
-            Console.WriteLine("Min register number:");
-            Console.WriteLine(collection.MinRegisterNumber);
 
-            Console.WriteLine("Research duration TwoYears:");
-            foreach(var rt in collection.TwoYearsResearches)
-            {
-                Console.WriteLine(rt);
-            }
 
-            Console.WriteLine("Grouping by publications count:");
-            foreach(var g in collection.NGroup(2))
-            {
-                Console.WriteLine($"Key = {g.Key}");
-                Console.WriteLine("Research teams:");
-                foreach (var t in g)
-                    Console.WriteLine(t);
-            }
+            // collection 2
 
-            int elementsCount = 0;
-            string inputStr;
-            do
-            {
-                Console.WriteLine("Enter elements count: ");
-                inputStr = Console.ReadLine();
-            }
-            while (!int.TryParse(inputStr,out elementsCount) || elementsCount < 1);
+            collection2.AddDefaults();
+            collection2.AddResearchTeams(
+                new ResearchTeam(),
+                new ResearchTeam(),
+                new ResearchTeam()
+            );
 
-            TestCollections test = new TestCollections(elementsCount);
-            Console.WriteLine("Showing execution time for first object:");
-            test.ShowExecutionTime(TestCollections.GetResearchTeam(0));
+            collection2.InsertAt(3, new ResearchTeam());
+            collection2.InsertAt(9, new ResearchTeam());
 
-            Console.WriteLine("Showing execution time for middle object:");
-            test.ShowExecutionTime(TestCollections.GetResearchTeam(elementsCount / 2));
+            Console.WriteLine("Teams journal 1");
+            Console.WriteLine(teamsJournal1);
 
-            Console.WriteLine("Showing execution time for last object:");
-            test.ShowExecutionTime(TestCollections.GetResearchTeam(elementsCount - 1));
-
-            Console.WriteLine("Showing execution time for non-existent object:");
-            test.ShowExecutionTime(TestCollections.GetResearchTeam(elementsCount + 1));
-
+            Console.WriteLine("Teams journal 2");
+            Console.WriteLine(teamsJournal2);
         }
 
     }
